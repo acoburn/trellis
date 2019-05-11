@@ -47,8 +47,11 @@ public class TrellisWebSocket {
             .map(r -> r.sendText("pub " + path)).forEach(future -> {
                 try {
                     future.get();
-                } catch (final ExecutionException | InterruptedException ex) {
+                } catch (final ExecutionException ex) {
                     LOGGER.error("Error sending notification: {}", ex.getCause().getMessage());
+                } catch (final InterruptedException ex) {
+                    LOGGER.error("Error sending notification: {}", ex.getCause().getMessage());
+                    Thread.currentThread().interrupt();
                 }
             });
     }

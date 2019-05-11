@@ -15,6 +15,7 @@ package org.trellisldp.websocket;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -98,7 +99,8 @@ public class JMSWebsocketTest implements MessageListener {
         final String text = "This is a message";
         final Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         final Message message = session.createTextMessage(text);
-        session.createProducer(session.createQueue(QUEUE)).send(message);
+        assertDoesNotThrow(() ->
+                session.createProducer(session.createQueue(QUEUE)).send(message));
         await().atMost(15, SECONDS).until(() -> MESSAGES.contains(text));
     }
 }
